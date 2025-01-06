@@ -1,0 +1,299 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+
+*{
+  box-sizing: border-box;
+  padding: 0px;
+  margin: 0px;
+}
+
+html{
+  font-size: 10px;
+}
+
+body{
+  font-family: "Poppins", sans-serif;
+  height: 100vh;
+
+}
+
+.login-main{
+  display: flex;
+}
+
+.login-left{
+  flex-grow: 1;
+  height: 100vh;
+  background-color: #E9E9E9;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.login-left img{
+  width: 400px;
+}
+
+.login-right{
+
+  height: 100vh;
+  overflow-y: auto;
+
+  flex-grow: 1;
+
+
+}
+
+.login-right-container{
+  height: 100%;
+  width: 80%;
+  margin: 0 auto;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+}
+
+.login-right form{
+  display: flex;
+  flex-direction: column;
+}
+
+.login-logo{
+  align-self: center;
+  padding-top: 50px;
+}
+
+.login-center{
+  margin: auto 0;
+}
+
+.login-logo img{
+  width: 50px;
+}
+
+.login-center h2{
+  font-size: 3.5rem;
+}
+
+.login-center{
+  text-align: center;
+}
+
+.login-center p{
+  font-weight: 400;
+  font-size: 2rem;
+  margin-bottom: 40px;
+}
+
+form input[type='email'],
+form input[type='password'],
+form input[type='text']
+ {
+  width: 100%;
+  padding: 16px;
+  margin-bottom: 16px;
+  border: 0px;
+  border-bottom: 1px solid black;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.pass-input-div{
+  position: relative;
+}
+
+.pass-input-div svg{
+  font-size: 20px;
+  position: absolute;
+  right: 10px;
+  bottom: 35px;
+  cursor: pointer;
+  outline: none;
+}
+
+form button[type='button'] {
+  width: 100%;
+  padding: 16px;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 30px;
+  font-weight: 600;
+}
+
+
+.login-center-options{
+  display: flex;
+  justify-content: space-between;
+}
+
+.remember-div{
+  display:flex;
+  align-items: center;
+  column-gap: 5px;
+}
+
+.remember-div label{
+  font-size: 1.3rem;
+  font-weight: 500;
+  cursor: pointer;
+  margin-top: 2px;
+}
+
+.forgot-pass-link{
+  text-decoration: none;
+  font-size: 1.3rem;
+}
+
+.forgot-pass-link:hover{
+  text-decoration: underline;
+}
+
+.login-center-buttons{
+  margin-top: 40px;
+  display: flex;
+  flex-direction: column;
+  row-gap: 10px;
+}
+
+.login-center-buttons button:nth-child(1){
+  background-color: black;
+  color: white;
+  border: 3px solid black;
+}
+
+.login-center-buttons button:nth-child(1):hover{
+  color: #333;
+  background-color: white;
+}
+
+.login-center-buttons button:nth-child(2){
+  background-color: #F0F0F0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  column-gap: 10px;
+}
+
+.login-center-buttons button:nth-child(2) img{
+  width: 30px;
+}
+
+.login-center-buttons button:nth-child(2):hover{
+  background-color: #c4c4c457;
+}
+
+.login-bottom-p{
+  text-align: center;
+  font-size: 1.5rem;
+  padding-bottom: 40px;
+}
+
+.login-bottom-p a{
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.login-bottom-p a:hover{
+  text-decoration: underline;
+}
+
+.error-div {
+  /* background-color: #ffdddd; Light red background */
+  color: #d8000c; /* Dark red text */
+  /* border: 1px solid #d8000c; Border to match text color */
+  /* padding: 15px; Spacing inside the div */
+  margin-left: 10px; 
+  /* border-radi: 5px; Rounded corners */
+  font-family: Arial, sans-serif; /* Font style */
+  font-size: 14px; /* Font size */
+  text-align: center; /* Centered text */
+}
+
+.carousel-container {
+  width: 50%;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.carousel-image {
+  width: 50vw;
+  height: 100vh;
+  object-fit: cover;
+}
+
+
+/* NotFound.css start here */
+.not-found-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh; /* Full height of the viewport */
+  text-align: center;
+  background-color: #f9f9f9; /* Light background color */
+}
+
+.not-found-title {
+  font-size: 2.5rem; /* Large font size for the title */
+  color: #ff4d4d; /* Red color for emphasis */
+}
+
+.not-found-message {
+  font-size: 1.2rem; /* Medium font size for the message */
+  color: #555; /* Dark gray color for the message */
+  margin: 20px 0; /* Margin around the message */
+}
+
+.not-found-link {
+  padding: 10px 20px; /* Padding for the button */
+  background-color: #007bff; /* Blue background for the button */
+  color: white; /* White text color */
+  text-decoration: none; /* Remove underline from link */
+  border-radius: 5px; /* Rounded corners */
+  transition: background-color 0.3s; /* Smooth transition */
+}
+
+.not-found-link:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+}
+
+/* NotFound.css ends here */
+
+/* totp css starts here */
+.qr-code {
+  margin-bottom: 20px;
+}
+
+
+.login-center ol {
+  margin-left: 20px;
+  padding-left: 0;
+  list-style: decimal inside;
+  color: #444;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.login-center ol li {
+  margin-bottom: 8px;
+}
+
+.totp-proceed-button{
+  display: inline-block;
+  padding: 10px 20px;
+  margin-top: 20px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #fff;
+  background-color: #007bff; /* Blue color */
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+/* totp css ends here */
