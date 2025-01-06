@@ -77,7 +77,7 @@ const SignUp = () => {
                 </a>
               </div>
               <div className="login-center-buttons">
-                <button type="button">Log In</button>
+                <button type="button">Sign Up</button>
                 <button type="button">
                   <img src={GoogleSvg} alt="" />
                   Continue with Google

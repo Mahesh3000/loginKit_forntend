@@ -1,8 +1,48 @@
-import React, { memo } from "react";
+import React, { memo, useState } from "react";
 import LeftSideContainer from "./LeftSideContainer";
 import Logo from "../../assets/logo.png";
+import { useNavigate } from "react-router-dom";
 
 const ForgetPassword = () => {
+  const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [error, setError] = useState("");
+  const [isCodeSent, setIsCodeSent] = useState(false);
+  const [resetCode, setResetCode] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+
+  const handleEmailSubmit = () => {
+    if (!email) {
+      setError("Email is required.");
+      return;
+    }
+    setError(""); // Clear errors
+    console.log("Password reset email sent to:", email);
+
+    // Simulate sending a reset code
+    setIsCodeSent(true);
+  };
+
+  const handleCodeSubmit = () => {
+    if (resetCode.length !== 6) {
+      setError("Please enter a valid 6-digit reset code.");
+      return;
+    }
+    if (!newPassword) {
+      setError("Please enter a new password.");
+      return;
+    }
+    setError(""); // Clear errors
+    console.log(
+      "Password reset with code:",
+      resetCode,
+      "New Password:",
+      newPassword
+    );
+
+    // Redirect or complete password reset
+    alert("Password reset successfully!");
+  };
   return (
     <div className="login-main">
       <LeftSideContainer />
@@ -12,58 +52,72 @@ const ForgetPassword = () => {
             <img src={Logo} alt="" />
           </div>
           <div className="login-center">
-            <h2>Welcome back!</h2>
-            <p>Please enter your details</p>
-            <form>
-              <input type="email" placeholder="Email" />
-              <div className="pass-input-div">
-                <input
-                  type={showPassword ? "text" : "password"}
-                  placeholder="Password"
-                />
-                {showPassword ? (
-                  <FaEyeSlash
-                    onClick={() => {
-                      setShowPassword(!showPassword);
-                    }}
+            {!isCodeSent ? (
+              <div>
+                <h2>Forgot Password</h2>
+                <p>
+                  Enter your registered email address to receive a password
+                  reset link.
+                </p>
+                <form>
+                  <input
+                    type="email"
+                    placeholder="Enter your email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
                   />
-                ) : (
-                  <FaEye
-                    onClick={() => {
-                      setShowPassword(!showPassword);
-                    }}
+                  <div className="login-center-options">
+                    <div className="error-div">{error}</div>
+                  </div>
+                  <div className="login-center-buttons">
+                    <button type="button" onClick={handleEmailSubmit}>
+                      Send Reset Link
+                    </button>
+                    <button type="button" onClick={() => navigate("/")}>
+                      Go Back
+                    </button>
+                  </div>
+                </form>
+              </div>
+            ) : (
+              <div>
+                <h2>Reset Your Password</h2>
+                <p>
+                  Enter the 6-digit reset code sent to your email and your new
+                  password.
+                </p>
+                <form>
+                  <input
+                    type="text"
+                    maxLength={6}
+                    placeholder="Enter reset code"
+                    value={resetCode}
+                    onChange={(e) => setResetCode(e.target.value)}
+                    required
                   />
-                )}
+                  <input
+                    type="password"
+                    placeholder="Enter new password"
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                    required
+                  />
+                  <div className="login-center-options">
+                    <div className="error-div">{error}</div>
+                  </div>
+                  <div className="login-center-buttons">
+                    <button type="button" onClick={handleCodeSubmit}>
+                      Reset Password
+                    </button>
+                    <button type="button" onClick={() => nav}>
+                      Go Back
+                    </button>
+                  </div>
+                </form>
               </div>
-
-              <div className="login-center-options">
-                <div className="error-div">{error}</div>
-                <a
-                  href="#"
-                  className="forgot-pass-link"
-                  onClick={handleForgetPasswordPath}
-                >
-                  Forgot password?
-                </a>
-              </div>
-              <div className="login-center-buttons">
-                <button type="button" onClick={handleLogin}>
-                  Log In
-                </button>
-
-                <button type="button">
-                  <img src={GoogleSvg} alt="" />
-                  Continue with Google
-                </button>
-              </div>
-            </form>
+            )}
           </div>
-          <p className="login-bottom-p">
-            Already have an account?{" "}
-            <a href="#" onClick={handleSignupPath}>
-              Sign Up
-            </a>
-          </p>
         </div>
       </div>
     </div>

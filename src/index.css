@@ -296,4 +296,16 @@ form button[type='button'] {
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
+
+.otp-timer {
+ /* background-color: #ffdddd; Light red background */
+ color: black; /* Dark red text */
+ /* border: 1px solid #d8000c; Border to match text color */
+ /* padding: 15px; Spacing inside the div */
+ margin-left: 10px; 
+ /* border-radi: 5px; Rounded corners */
+ font-family: Arial, sans-serif; /* Font style */
+ font-size: 14px; /* Font size */
+ text-align: center; /* Centered text */
+}
 /* totp css ends here */

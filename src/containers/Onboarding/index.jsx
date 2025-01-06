@@ -7,7 +7,7 @@ import NotFound from "../Login/NotFound";
 import Totp from "./Totp";
 
 const Onboarding = () => {
-  const [step, setStep] = useState(2);
+  const [step, setStep] = useState(1);
   return (
     <div className="login-main">
       <LeftSideContainer />
