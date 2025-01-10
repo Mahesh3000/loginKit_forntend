@@ -5,9 +5,15 @@ import LeftSideContainer from "../Login/LeftSideContainer";
 import Otp from "./Otp";
 import NotFound from "../Login/NotFound";
 import Totp from "./Totp";
+import { useSelector } from "react-redux";
 
 const Onboarding = () => {
   const [step, setStep] = useState(1);
+
+  const userData = useSelector((state) => state?.auth?.userData);
+
+  console.log("userData", userData);
+
   return (
     <div className="login-main">
       <LeftSideContainer />

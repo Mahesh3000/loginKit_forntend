@@ -16,10 +16,9 @@ const ForgetPassword = () => {
       setError("Email is required.");
       return;
     }
-    setError(""); // Clear errors
+    setError("");
     console.log("Password reset email sent to:", email);
 
-    // Simulate sending a reset code
     setIsCodeSent(true);
   };
 
@@ -40,8 +39,7 @@ const ForgetPassword = () => {
       newPassword
     );
 
-    // Redirect or complete password reset
-    alert("Password reset successfully!");
+    navigate("/");
   };
   return (
     <div className="login-main">

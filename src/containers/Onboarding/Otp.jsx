@@ -7,6 +7,19 @@ const Otp = () => {
   const [otp, setOtp] = useState("");
   const [timeLeft, setTimeLeft] = useState(30);
   const [isDisabled, setIsDisabled] = useState(true);
+  const [email, setEmail] = useState("mahdskjhkjkj@gmail.com");
+  const [phoneNumber, setPhoneNumber] = useState(8768767868);
+
+  const maskEmail = (email) => {
+    const [localPart, domain] = email.split("@");
+    const maskedLocalPart = localPart[0] + "******";
+    return `${maskedLocalPart}@${domain}`;
+  };
+
+  const maskPhoneNumber = (phoneNumber) => {
+    const strNumber = phoneNumber.toString();
+    return "******" + strNumber.slice(-4);
+  };
 
   const handleChange = (e) => {
     setOtp(e.target.value);
@@ -25,8 +38,9 @@ const Otp = () => {
     return () => clearInterval(timer);
   }, [timeLeft]);
 
-  console.log("timeLeft", timeLeft);
-
+  const handleResendOtp = () => {
+    console.log("kjdshfj");
+  };
   const handleSubmit = () => {
     if (otp.length !== 6) {
       setError("Please enter a valid 6-digit OTP.");
@@ -43,8 +57,11 @@ const Otp = () => {
   };
   return (
     <div className="login-center">
-      <h2>Verify your account</h2>
-      <p>Enter the 6-digit OTP sent to your email or phone number.</p>
+      <h2>Verify your Account</h2>
+      <p>
+        Enter the 6-digit OTP sent to {maskEmail(email)} or{" "}
+        {maskPhoneNumber(phoneNumber)}.
+      </p>
       <form>
         <input
           type="text"
@@ -60,16 +77,22 @@ const Otp = () => {
             Resend OTP in: <strong>{timeLeft}</strong>
           </div>
 
-          <a href="#" className="forgot-pass-link" disabled={isDisabled}>
+          <a
+            href="#"
+            className={`resend-link ${isDisabled ? "disabled" : ""}`}
+            onClick={handleResendOtp}
+          >
             Resend OTP
           </a>
         </div>
-        <div className="error-div">{error}</div>
+        <div className="login-center-options">
+          <div className="error-div">{error}</div>
+        </div>
         <div className="login-center-buttons">
           <button type="button" onClick={handleSubmit}>
             Verify
           </button>
-          <button type="button" onClick={handleSubmit}>
+          <button type="button" onClick={() => navigate("/")}>
             Go Back
           </button>
         </div>

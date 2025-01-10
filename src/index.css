@@ -307,5 +307,31 @@ form button[type='button'] {
  font-family: Arial, sans-serif; /* Font style */
  font-size: 14px; /* Font size */
  text-align: center; /* Centered text */
+ margin-bottom: 10px;
+}
+
+.resend-link {
+  color: #007bff;
+  text-decoration: none;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.resend-link:hover {
+  text-decoration: underline;
+}
+
+.resend-link.disabled {
+  color: #ccc;
+  pointer-events: none;
+  cursor: not-allowed;
+}
+
+.otpInput {
+  width: 40px;
+  height: 40px;
+  margin: 5px;
+  text-align: center;
+  font-size: 1.2em;
 }
 /* totp css ends here */

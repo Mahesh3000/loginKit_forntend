@@ -11,6 +11,7 @@ import SignUp from "./containers/Login/SignUp";
 import NotFound from "./containers/Login/NotFound";
 import Onboarding from "./containers/Onboarding";
 import ForgetPassword from "./containers/Login/ForgetPassword";
+import Dashboard from "./containers/Dashboard";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
         <Route path="/signup" element={<SignUp />} />
         <Route path="/onboarding" element={<Onboarding />} />
         <Route path="/forget-password" element={<ForgetPassword />} />
+        <Route path="/dashboard" element={<Dashboard />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </Router>

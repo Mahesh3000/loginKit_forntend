@@ -29,7 +29,7 @@ const SignUp = () => {
             <h2>Create an account</h2>
             <p>Sign up to get started</p>
             <form>
-              <input type="text" placeholder="Full Name" />
+              <input type="text" placeholder="UserName" />
               <input type="email" placeholder="Email" />
               <div className="pass-input-div">
                 <input
