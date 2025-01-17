@@ -1,31 +1,58 @@
 import React, { memo, useState } from "react";
-import { QRCodeCanvas } from "qrcode.react";
+import { useNavigate } from "react-router-dom";
+import { API_URLS } from "../constants";
+import axios from "axios";
 
-const Totp = () => {
-  const [isFirstTime, setIsFirstTime] = useState(true);
+const Totp = ({
+  generateQr,
+  setGenerateQr,
+  setIsFirstTime,
+  isFirstTime,
+  userData,
+}) => {
+  const navigate = useNavigate();
+
   const [error, setError] = useState("");
   const [totp, setTOtp] = useState("");
-  const secretKey = "YOUR_SECRET_KEY"; // Replace with server-generated secret key
-  const totpUri = `otpauth://totp/YourAppName?secret=${secretKey}&issuer=YourAppName`;
 
   const handleChange = (e) => {
     setTOtp(e.target.value);
+    setError("");
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (totp.length !== 6) {
       setError("Please enter a valid 6-digit OTP.");
       return;
     }
+    console.log("totp", totp);
 
-    setError(""); // Clear errors
+    setError("");
+    try {
+      if (userData) {
+        const response = await axios.post(`${API_URLS.VERIFY_TOTP_URL}`, {
+          identifier: userData.username,
+          code: totp,
+        });
 
-    // Handle OTP verification (API call, etc.)
-    console.log("OTP entered:", totp);
-
-    // Redirect after successful verification
-    navigate("/dashboard"); // Replace with your target route
+        if (response?.status === 200 && response?.data?.success) {
+          console.log("TOTP verification successful:", response.data);
+          navigate("/dashboard");
+        } else {
+          setError(
+            response?.data?.message || "Invalid TOTP. Please try again."
+          );
+        }
+      }
+    } catch (error) {
+      console.error("Error during TOTP verification:", error?.response?.data);
+      setError(
+        error?.response?.data?.message ||
+          "An error occurred during TOTP verification. Please try again."
+      );
+    }
   };
+
   return (
     <div className="login-center">
       {isFirstTime ? (
@@ -42,7 +69,7 @@ const Totp = () => {
             </li>
           </ol>
           <div className="qr-code">
-            <QRCodeCanvas value={totpUri} size={200} />
+            <img src={generateQr} alt="QR Code" />
           </div>
           <button
             type="button"
@@ -66,12 +93,11 @@ const Totp = () => {
               placeholder="Enter TOTP"
               value={totp}
               onChange={handleChange}
-              required
             />
             <div className="login-center-options">
               <div className="error-div">{error}</div>
               <a href="#" className="forgot-pass-link">
-                Resend OTP
+                Forget TOTP
               </a>
             </div>
             <div className="login-center-buttons">

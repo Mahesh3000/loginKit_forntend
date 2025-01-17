@@ -1,5 +1,6 @@
 import React, { memo, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { API_URLS } from "../constants";
 
 const Otp = () => {
   const navigate = useNavigate();
@@ -41,19 +42,40 @@ const Otp = () => {
   const handleResendOtp = () => {
     console.log("kjdshfj");
   };
-  const handleSubmit = () => {
+
+  const handleSubmit = async () => {
     if (otp.length !== 6) {
       setError("Please enter a valid 6-digit OTP.");
       return;
     }
+    navigate("/dashboard");
 
-    setError(""); // Clear errors
+    console.log("otp", otp);
 
-    // Handle OTP verification (API call, etc.)
-    console.log("OTP entered:", otp);
+    setError("");
+    // try {
+    //   if (userData) {
+    //     const response = await axios.post(`${API_URLS.VERIFY_OTP_URL}`, {
+    //       identifier: userData.username,
+    //       code: otp,
+    //     });
 
-    // Redirect after successful verification
-    navigate("/dashboard"); // Replace with your target route
+    //     if (response?.status === 200 && response?.data?.success) {
+    //       console.log("TOTP verification successful:", response.data);
+    //       navigate("/dashboard");
+    //     } else {
+    //       setError(
+    //         response?.data?.message || "Invalid TOTP. Please try again."
+    //       );
+    //     }
+    //   }
+    // } catch (error) {
+    //   console.error("Error during TOTP verification:", error?.response?.data);
+    //   setError(
+    //     error?.response?.data?.message ||
+    //       "An error occurred during TOTP verification. Please try again."
+    //   );
+    // }
   };
   return (
     <div className="login-center">
