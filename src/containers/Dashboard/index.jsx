@@ -1,9 +1,10 @@
 import React, { memo } from "react";
+import Header from "./Header";
 
 const Dashboard = () => {
   return (
     <div>
-      <h1>dashboard</h1>
+      <Header />
     </div>
   );
 };

@@ -29,14 +29,3 @@ function App() {
 }
 
 export default App;
-
-{
-  /* <Route path="/dashboard" {<ProtectedRoute element={<Onboarding />} />}/> */
-}
-
-{
-  /* <Route
-  path="/orders"
-  element={<ProtectedRoute element={<Orders />} />}
-/> */
-}
