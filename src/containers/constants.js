@@ -8,6 +8,8 @@ const API_URLS = {
   VERIFIED_EMAILS_LIST: "http://localhost:8000/otp/list-verified-emails",
   GET_USER: "http://localhost:8000/auth/get-user",
   VERIFY_OTP_URL: "http://localhost:8000/otp/verify-otp",
+  TOGGLE_TOTP: "http://localhost:8000/auth/toggle-totp",
+  TOGGLE_OTP: "http://localhost:8000/auth/toggle-otp",
 };
 
 export { API_URLS };
