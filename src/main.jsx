@@ -1,11 +1,12 @@
 import React from "react";
-import ReactDOM from "react-dom";
+import { createRoot } from "react-dom/client"; // Import createRoot from react-dom/client
 import { Provider } from "react-redux";
 import App from "./App";
-import store from "./redux/store/store"; // Ensure correct path to your store file
+import store from "./redux/store/store"; // Ensure the correct path to your store file
 import "./index.css";
 
-const root = ReactDOM.createRoot(document.getElementById("root"));
+const container = document.getElementById("root");
+const root = createRoot(container); // Create the root using createRoot
 
 root.render(
   <React.StrictMode>

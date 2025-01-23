@@ -163,6 +163,15 @@ const Login = () => {
     }
   };
 
+  const handleGogleLogin = () => {
+    // Redirect the user to the Google OAuth URL
+    window.location.href = `${API_URLS.GOOGLE_LOGIN}/callback`;
+  };
+
+  const handleGoogleLogin = () => {
+    window.open(`${API_URLS.GOOGLE_LOGIN}/callback`, "_self");
+  };
+
   return (
     <div className="login-main">
       {/* {isLoading && <Loading />} */}
@@ -243,7 +252,11 @@ const Login = () => {
                     >
                       Login
                     </button>
-                    <button type="button" className="google-btn">
+                    <button
+                      type="button"
+                      className="google-btn"
+                      onClick={handleGoogleLogin}
+                    >
                       <img src={GoogleSvg} alt="Google Logo" />
                       Continue with Google
                     </button>

@@ -10,6 +10,18 @@ const ForgetPassword = () => {
   const [isCodeSent, setIsCodeSent] = useState(false);
   const [resetCode, setResetCode] = useState("");
   const [newPassword, setNewPassword] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState(8768767868);
+
+  const maskEmail = (email) => {
+    const [localPart, domain] = email.split("@");
+    const maskedLocalPart = localPart[0] + "******";
+    return `${maskedLocalPart}@${domain}`;
+  };
+
+  const maskPhoneNumber = (phoneNumber) => {
+    const strNumber = phoneNumber.toString();
+    return "******" + strNumber.slice(-4);
+  };
 
   const handleEmailSubmit = () => {
     if (!email) {
@@ -17,8 +29,6 @@ const ForgetPassword = () => {
       return;
     }
     setError("");
-    console.log("Password reset email sent to:", email);
-
     setIsCodeSent(true);
   };
 
@@ -82,8 +92,8 @@ const ForgetPassword = () => {
               <div>
                 <h2>Reset Your Password</h2>
                 <p>
-                  Enter the 6-digit reset code sent to your email and your new
-                  password.
+                  Enter the 6-digit OTP sent to {maskEmail(email)} or{" "}
+                  {maskPhoneNumber(phoneNumber)}.
                 </p>
                 <form>
                   <input
@@ -108,7 +118,7 @@ const ForgetPassword = () => {
                     <button type="button" onClick={handleCodeSubmit}>
                       Reset Password
                     </button>
-                    <button type="button" onClick={() => nav}>
+                    <button type="button" onClick={() => navigate("/")}>
                       Go Back
                     </button>
                   </div>

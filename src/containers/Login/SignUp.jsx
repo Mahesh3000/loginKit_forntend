@@ -83,7 +83,7 @@ const SignUp = () => {
       });
 
       if (response.status === 200) {
-        console.log("sign up success ful");
+        console.log("sign up success full");
 
         try {
           const verifyResponse = await axios.post(

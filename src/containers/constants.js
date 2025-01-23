@@ -10,6 +10,7 @@ const API_URLS = {
   VERIFY_OTP_URL: "http://localhost:8000/otp/verify-otp",
   TOGGLE_TOTP: "http://localhost:8000/auth/toggle-totp",
   TOGGLE_OTP: "http://localhost:8000/auth/toggle-otp",
+  GOOGLE_LOGIN: "http://localhost:8000/auth/google",
 };
 
 export { API_URLS };

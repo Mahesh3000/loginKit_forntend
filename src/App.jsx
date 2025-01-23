@@ -22,7 +22,7 @@ function App() {
         <Route path="/onboarding" element={<Onboarding />} />
         <Route path="/forget-password" element={<ForgetPassword />} />
         <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="*" element={<NotFound />} />
+        <Route path="/jhgjh" element={<NotFound />} />
       </Routes>
     </Router>
   );
