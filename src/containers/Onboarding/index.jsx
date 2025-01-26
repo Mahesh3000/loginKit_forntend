@@ -35,11 +35,13 @@ const Onboarding = () => {
 
   const sendEmailToUser = async (user) => {
     try {
-      const response = await axios.post(`${API_URLS.SEND_OTP_URL}`, {
+      const response = await axios.post(`${API_URLS.REQUEST_OTP_URL}`, {
         email: user?.email,
       });
+      console.log("response", response);
+
       if (response?.status === 200 && response?.data?.success) {
-        setGenerateQr(response?.data?.qrCode);
+        // setGenerateQr(response?.data?.qrCode);
       } else {
         console.error("Failed to generate QR Code:", response?.data?.message);
       }
@@ -90,7 +92,7 @@ const Onboarding = () => {
           <div className="login-logo">
             <img src={Logo} alt="Logo" />
           </div>
-          {step === 1 && <Otp />}
+          {step === 1 && <Otp userData={userData} />}
           {step === 2 && (
             <Totp
               generateQr={generateQr}

@@ -8,7 +8,7 @@ const Dashboard = () => {
 
   return (
     <div>
-      <Header />
+      <Header user={userData} />
     </div>
   );
 };

@@ -1,106 +1,86 @@
 import React, { useState } from "react";
-import axios from "axios"; // Add axios to handle API requests
-import { API_URLS } from "../constants";
+import { useNavigate } from "react-router-dom";
 
-const ProfileModal = ({ onClose, onLogout }) => {
-  const [isTOTP, setIsTOTP] = useState(true); // To manage TOTP section
-  const [isTOTPEnabled, setIsTOTPEnabled] = useState(false); // To toggle TOTP on/off
-  const [isOTPEnabled, setIsOTPEnabled] = useState(false); // To toggle OTP on/off
+const ProfileModal = ({ isOpen, onClose, user }) => {
+  const [isTOTPEnabled, setIsTOTPEnabled] = useState(false);
+  const [isOTPEnabled, setIsOTPEnabled] = useState(false);
+  const navigate = useNavigate();
 
-  const handleToggleTOTP = async () => {
-    try {
-      const response = await axios.post(`${API_URLS.TOGGLE_TOTP}`, {
-        enable: !isTOTPEnabled, // Send the new TOTP state
-        identifier: "mahesh.sivngi@gmail.com",
-      });
-
-      if (response.status === 200) {
-        setIsTOTPEnabled((prevState) => !prevState); // Toggle TOTP
-        // alert(response.data.message); // Display success message
-      }
-    } catch (error) {
-      console.error(
-        "Error toggling TOTP:",
-        error.response?.data || error.message
-      );
-      // alert("Failed to toggle TOTP. Please try again.");
-    }
+  const handleTOTPChange = () => {
+    setIsTOTPEnabled((prev) => !prev);
   };
 
-  const handleToggleOTP = async () => {
-    try {
-      const response = await axios.post(`${API_URLS.TOGGLE_OTP}`, {
-        identifier: "mahesh.sivngi@gmail.com",
-        enable: !isOTPEnabled, // Send the new OTP state
-      });
+  const handleOTPChange = () => {
+    setIsOTPEnabled((prev) => !prev);
+  };
+  console.log("user", user);
 
-      if (response.status === 200) {
-        setIsOTPEnabled((prevState) => !prevState); // Toggle OTP
-        // alert(response.data.message); // Display success message
-      }
-    } catch (error) {
-      console.error(
-        "Error toggling OTP:",
-        error.response?.data || error.message
-      );
-      // alert("Failed to toggle OTP. Please try again.");
+  const handleLogout = () => {
+    localStorage.removeItem("authToken"); // Clear authentication token
+    localStorage.removeItem(user?.username); // Clear user data (if saved)
+    navigate("/"); // Redirect to home or login page
+  };
+
+  // Handle profile image upload
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setProfileImage(reader.result); // Set the profile image preview
+      };
+      reader.readAsDataURL(file); // Read the file as a data URL for preview
     }
   };
+  if (!isOpen) return null;
 
   return (
-    <div className="profile-modal">
-      <ul>
-        <li onClick={handleToggleTOTP}>TOTP Setup</li>
-        <li onClick={handleToggleOTP}>OTP Options</li>
-        <li onClick={onLogout}>Logout</li>
-      </ul>
-
-      {/* Conditional rendering based on whether TOTP or OTP is selected */}
-      {isTOTP ? (
-        <div className="totp-content">
-          <h4>TOTP Setup</h4>
-          <p>Here, you can set up your Time-based One-Time Password (TOTP).</p>
-
-          {/* Toggle for enabling/disabling TOTP */}
-          <div className="toggle-container">
-            <label className="switch">
-              <input
-                type="checkbox"
-                checked={isTOTPEnabled}
-                onChange={handleToggleTOTP}
-              />
-              <span className="slider round"></span>
-            </label>
-            <span>{isTOTPEnabled ? "TOTP Enabled" : "TOTP Disabled"}</span>
-          </div>
-
-          <button onClick={handleToggleTOTP}>
-            {isTOTPEnabled ? "Disable TOTP" : "Enable TOTP"}
-          </button>
+    <div className="modal-overlay" onClick={onClose}>
+      <div className="modal-backdrop"></div>
+      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+        <div className="profile-header">
+          <img
+            src={user.profilePhoto} // Assuming user has profilePhoto property
+            alt="User Profile"
+            className="profile-image"
+          />
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleImageUpload}
+            className="image-upload-input"
+          />
+          <h2 className="modal-title">Profile Settings</h2>
         </div>
-      ) : (
-        <div className="otp-content">
-          <h4>OTP Options</h4>
-          <p>Here, you can manage your One-Time Password (OTP) settings.</p>
-
-          {/* Toggle for enabling/disabling OTP */}
-          <div className="toggle-container">
-            <label className="switch">
-              <input
-                type="checkbox"
-                checked={isOTPEnabled}
-                onChange={handleToggleOTP}
-              />
-              <span className="slider round"></span>
-            </label>
-            <span>{isOTPEnabled ? "OTP Enabled" : "OTP Disabled"}</span>
-          </div>
-
-          <button onClick={handleToggleOTP}>
-            {isOTPEnabled ? "Disable OTP" : "Enable OTP"}
-          </button>
+        <div className="modal-toggle">
+          <label className="toggle-label">
+            <span>Enable TOTP</span>
+            <input
+              type="checkbox"
+              checked={isTOTPEnabled}
+              onChange={handleTOTPChange}
+              className="toggle-input"
+            />
+          </label>
         </div>
-      )}
+        <div className="modal-toggle">
+          <label className="toggle-label">
+            <span>Enable OTP</span>
+            <input
+              type="checkbox"
+              checked={isOTPEnabled}
+              onChange={handleOTPChange}
+              className="toggle-input"
+            />
+          </label>
+        </div>
+        <button onClick={onClose} className="modal-close-button">
+          Close
+        </button>
+        <button onClick={handleLogout} className="logout-button">
+          Logout
+        </button>
+      </div>
     </div>
   );
 };

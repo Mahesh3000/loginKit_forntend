@@ -1,8 +1,9 @@
 import React, { memo, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { API_URLS } from "../constants";
+import axios from "axios";
 
-const Otp = () => {
+const Otp = ({ userData }) => {
   const navigate = useNavigate();
   const [error, setError] = useState("");
   const [otp, setOtp] = useState("");
@@ -10,6 +11,7 @@ const Otp = () => {
   const [isDisabled, setIsDisabled] = useState(true);
   const [email, setEmail] = useState("mahdskjhkjkj@gmail.com");
   const [phoneNumber, setPhoneNumber] = useState(8768767868);
+  //console.log("userData", userData);
 
   const maskEmail = (email) => {
     const [localPart, domain] = email.split("@");
@@ -44,39 +46,37 @@ const Otp = () => {
   };
 
   const handleSubmit = async () => {
-    if (otp.length !== 6) {
+    if (!otp || otp.length !== 6) {
       setError("Please enter a valid 6-digit OTP.");
       return;
     }
-    navigate("/dashboard");
 
-    console.log("otp", otp);
+    // console.log("OTP entered:", otp);
 
-    setError("");
-    // try {
-    //   if (userData) {
-    //     const response = await axios.post(`${API_URLS.VERIFY_OTP_URL}`, {
-    //       identifier: userData.username,
-    //       code: otp,
-    //     });
+    try {
+      const response = await axios.post(`${API_URLS.VERIFY_OTP_URL}`, {
+        email: userData.email,
+        otp: otp,
+      });
 
-    //     if (response?.status === 200 && response?.data?.success) {
-    //       console.log("TOTP verification successful:", response.data);
-    //       navigate("/dashboard");
-    //     } else {
-    //       setError(
-    //         response?.data?.message || "Invalid TOTP. Please try again."
-    //       );
-    //     }
-    //   }
-    // } catch (error) {
-    //   console.error("Error during TOTP verification:", error?.response?.data);
-    //   setError(
-    //     error?.response?.data?.message ||
-    //       "An error occurred during TOTP verification. Please try again."
-    //   );
-    // }
+      if (response?.status === 200 && response?.data?.success) {
+        console.log("OTP verification successful:", response.data);
+        navigate("/dashboard");
+      } else {
+        setError(response?.data?.message || "Invalid TOTP. Please try again.");
+      }
+    } catch (error) {
+      console.error(
+        "Error during OTP verification:",
+        error?.response?.data || error.message
+      );
+      setError(
+        error?.response?.data?.message ||
+          "An error occurred during TOTP verification. Please try again."
+      );
+    }
   };
+
   return (
     <div className="login-center">
       <h2>Verify your Account</h2>

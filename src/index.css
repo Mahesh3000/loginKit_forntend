@@ -594,5 +594,89 @@ input:checked + .slider:before {
   border-radius: 50%;
 }
 
-
 /* header css ends here */
+
+/* profile modal css starts here */
+/* Modal Overlay */
+.modal-content {
+  width: 500px; /* Medium width */
+  max-width: 100%; /* Responsive width */
+  max-height: 80vh; /* Set a maximum height to allow scrolling if content is large */
+  padding: 20px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+  position: relative;
+  overflow-y: auto; /* Enables vertical scrolling */
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.profile-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.profile-image {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin-right: 15px;
+}
+
+.modal-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.modal-toggle {
+  margin-bottom: 20px;
+}
+
+.toggle-label {
+  display: flex;
+  align-items: center;
+}
+
+.toggle-input {
+  margin-left: 10px;
+}
+
+.totp-info, .otp-info {
+  font-size: 0.875rem;
+  color: #555;
+  margin-top: 5px;
+}
+
+.modal-close-button, .logout-button {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.logout-button {
+  background-color: #dc3545; /* Red color for logout button */
+}
+
+.modal-close-button:hover, .logout-button:hover {
+  opacity: 0.8;
+}
+
+/* profile modal css ends here */
