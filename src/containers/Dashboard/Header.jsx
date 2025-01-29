@@ -27,7 +27,7 @@ const Header = ({ user }) => {
       </nav>
       <div className="header-profile" onClick={openModal}>
         <img
-          src="https://via.placeholder.com/40"
+          src="UserProfilePic"
           alt="User Profile"
           className="profile-image"
         />

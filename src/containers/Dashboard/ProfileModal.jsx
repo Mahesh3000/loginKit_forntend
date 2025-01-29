@@ -30,13 +30,6 @@ const ProfileModal = ({ isOpen, onClose, user }) => {
 
   const navigate = useNavigate();
 
-  const handleTOTPChange = () => {
-    setIsTOTPEnabled((prev) => !prev);
-  };
-
-  const handleOTPChange = () => {
-    setIsOTPEnabled((prev) => !prev);
-  };
   console.log("user", user);
 
   const handleLogout = () => {
@@ -103,6 +96,29 @@ const ProfileModal = ({ isOpen, onClose, user }) => {
         error?.response?.data?.message ||
           "An error occurred during TOTP verification. Please try again."
       );
+    }
+  };
+  const handleOtpSwitch = async () => {
+    try {
+      const newOtpStatus = !isOTPEnabled; // Toggle the value directly
+
+      // Use functional setState to get the latest state value
+      setIsOTPEnabled((prevState) => {
+        return newOtpStatus;
+      });
+
+      const response = await axios.post(`${API_URLS.TOGGLE_OTP}`, {
+        identifier: user.username,
+        enable: newOtpStatus, // Use the toggled value directly in the API request
+      });
+
+      if (response?.status === 200 && response?.data?.success) {
+        console.log("successfully toggled");
+      } else {
+        console.error("Failed to generate QR Code:", response?.data?.message);
+      }
+    } catch (error) {
+      console.error("Error while generating QR Code:", error?.message);
     }
   };
 
@@ -221,7 +237,7 @@ const ProfileModal = ({ isOpen, onClose, user }) => {
                       <input
                         type="checkbox"
                         checked={isOTPEnabled}
-                        onChange={() => setIsOTPEnabled(!isOTPEnabled)}
+                        onChange={handleOtpSwitch}
                       />
                       <span className="slider round"></span>
                     </label>

@@ -47,6 +47,7 @@ const Login = () => {
         setMessage("");
       } else {
         setIsEmailVerified(false);
+        setError(true);
         setIsMediumError(true);
         setMessage(
           "Email is not verified. Please verify your email before proceeding."
@@ -163,11 +164,6 @@ const Login = () => {
     }
   };
 
-  const handleGogleLogin = () => {
-    // Redirect the user to the Google OAuth URL
-    window.location.href = `${API_URLS.GOOGLE_LOGIN}/callback`;
-  };
-
   const handleGoogleLogin = () => {
     window.open(`${API_URLS.GOOGLE_LOGIN}/callback`, "_self");
   };
@@ -248,7 +244,7 @@ const Login = () => {
                     <button
                       type="submit"
                       className="sign-up-btn"
-                      disabled={!isEmailVerified}
+                      // disabled={!isEmailVerified}
                     >
                       Login
                     </button>
