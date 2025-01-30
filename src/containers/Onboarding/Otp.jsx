@@ -11,7 +11,7 @@ const Otp = ({ userData }) => {
   const [isDisabled, setIsDisabled] = useState(true);
   const [email, setEmail] = useState("mahdskjhkjkj@gmail.com");
   const [phoneNumber, setPhoneNumber] = useState(8768767868);
-  //console.log("userData", userData);
+  console.log("userData in otp screen", userData);
 
   const maskEmail = (email) => {
     const [localPart, domain] = email.split("@");
@@ -45,7 +45,10 @@ const Otp = ({ userData }) => {
     console.log("kjdshfj");
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    console.log("i ranssss");
+
     if (!otp || otp.length !== 6) {
       setError("Please enter a valid 6-digit OTP.");
       return;
@@ -84,7 +87,7 @@ const Otp = ({ userData }) => {
         Enter the 6-digit OTP sent to {maskEmail(email)} or{" "}
         {maskPhoneNumber(phoneNumber)}.
       </p>
-      <form>
+      <form onSubmit={handleSubmit}>
         <input
           type="text"
           maxLength={6}
@@ -111,10 +114,14 @@ const Otp = ({ userData }) => {
           <div className="error-div">{error}</div>
         </div>
         <div className="login-center-buttons">
-          <button type="button" onClick={handleSubmit}>
+          <button className="opt-button" type="submit">
             Verify
           </button>
-          <button type="button" onClick={() => navigate("/")}>
+          <button
+            className="opt-buttons"
+            type="button"
+            onClick={() => navigate("/")}
+          >
             Go Back
           </button>
         </div>

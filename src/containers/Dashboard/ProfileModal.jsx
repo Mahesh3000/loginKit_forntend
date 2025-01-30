@@ -2,39 +2,53 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { API_URLS } from "../constants";
 import axios from "axios";
+import { setUserData } from "../../redux";
+import { useDispatch } from "react-redux";
 
 const ProfileModal = ({ isOpen, onClose, user }) => {
-  const [isTOTPEnabled, setIsTOTPEnabled] = useState(false);
-  const [isOTPEnabled, setIsOTPEnabled] = useState(false);
+  const dispatch = useDispatch();
   const [activeTab, setActiveTab] = useState("home");
   const [generateQr, setGenerateQr] = useState(false);
   const [addMFA, setAddMFA] = useState(false);
   const [showQrCode, setShowQrCode] = useState(false);
   const [mfaCode1, setMfaCode1] = useState();
   const [error, setError] = useState("");
-
-  const userData = {
-    fullName: "Burk Macklin",
-    email: "abc@gmail.com",
-    phone: "0092346874656",
-    address: "Street No. 4, XYZ",
-    projectName: "Project ABC",
-    projectDescription: "This is a sample project description.",
-  };
+  const [userDetails, setUserDetails] = useState(null);
+  const [isTOTPEnabled, setIsTOTPEnabled] = useState(null);
+  const [isOTPEnabled, setIsOTPEnabled] = useState(null);
 
   useEffect(() => {
-    if (showQrCode) {
-      // fetchQrCode();
+    const storedUserDetails = localStorage.getItem("user");
+    if (storedUserDetails) {
+      const parsedUserDetails = JSON.parse(storedUserDetails);
+      setUserDetails(parsedUserDetails?.user);
     }
-  });
+  }, []);
+
+  useEffect(() => {
+    if (userDetails) {
+      // Set the state based on the data after it's loaded
+      setIsTOTPEnabled(userDetails.totp_enabled);
+      setIsOTPEnabled(userDetails.otp_enabled);
+      // localStorage.setItem(
+      //   "user",
+      //   JSON.stringify({
+      //     // ...userDetails,
+      //     user: { ...userDetails.user, totp_enabled: true },
+      //   })
+      // );
+    }
+  }, [userDetails]); // Only runs when userDetails changes
+
+  console.log("userDetails", userDetails);
 
   const navigate = useNavigate();
 
-  console.log("user", user);
+  console.log("user", user.otp_enabled);
 
   const handleLogout = () => {
-    localStorage.removeItem("authToken"); // Clear authentication token
-    localStorage.removeItem(user?.username); // Clear user data (if saved)
+    localStorage.removeItem("token"); // Clear authentication token
+    localStorage.removeItem("user"); // Clear user data (if saved)
     navigate("/"); // Redirect to home or login page
   };
 
@@ -42,7 +56,7 @@ const ProfileModal = ({ isOpen, onClose, user }) => {
     setShowQrCode(true);
     try {
       const response = await axios.post(`${API_URLS.GENERATE_QR_URL}`, {
-        username: "mahes2shjs",
+        username: userDetails.username,
       });
       if (response?.status === 200 && response?.data?.success) {
         setGenerateQr(response?.data?.qrCode);
@@ -64,26 +78,148 @@ const ProfileModal = ({ isOpen, onClose, user }) => {
       reader.readAsDataURL(file); // Read the file as a data URL for preview
     }
   };
+
+  const handleOtpSwitch = async () => {
+    try {
+      const newOtpStatus = !isOTPEnabled; // Toggle the value directly
+
+      // Use functional setState to get the latest state value
+      setIsOTPEnabled((prevState) => {
+        return newOtpStatus;
+      });
+
+      const response = await axios.post(`${API_URLS.TOGGLE_OTP}`, {
+        identifier: userDetails.username,
+        enable: newOtpStatus, // Use the toggled value directly in the API request
+      });
+
+      if (response?.status === 200 && response?.data?.success) {
+        console.log("successfully toggled");
+      } else {
+        console.error("Failed to generate QR Code:", response?.data?.message);
+      }
+    } catch (error) {
+      console.error("Error while generating QR Code:", error?.message);
+    }
+  };
+
+  // () => {
+  //   if (isTOTPEnabled) {
+  //     setIsTOTPEnabled(false);
+  //   }
+  // }
+  // const handleTOTPSwitch = async () => {
+  //   try {
+  //     const newTOTPStatus = !isTOTPEnabled; // Toggle the value directly
+
+  //     // Make the API request to update the TOTP status
+  //     const response = await axios.post(`${API_URLS.TOGGLE_TOTP}`, {
+  //       identifier: userDetails.username,
+  //       enable: newTOTPStatus, // Send the toggled value to the API
+  //     });
+
+  //     if (response?.status === 200 && response?.data?.success) {
+  //       // Update localStorage only if API call is successful
+  //       console.log("Successfully toggled TOTP status");
+
+  //       // Use functional setState to get the latest state value
+  //       setIsTOTPEnabled((prevState) => {
+  //         const updatedStatus = !prevState;
+
+  //         return updatedStatus;
+  //       });
+  //     } else {
+  //       console.error("Failed to toggle TOTP:", response?.data?.message);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error while toggling TOTP:", error?.message);
+  //   }
+  // };
+
+  // const verifyMfaCode = async () => {
+  //   if (mfaCode1.length !== 6) {
+  //     setError("Please enter a valid 6-digit OTP.");
+  //     return;
+  //   }
+  //   // console.log("totp", totp);
+
+  //   setError("");
+  //   try {
+  //     if (userDetails) {
+  //       const response = await axios.post(`${API_URLS.VERIFY_TOTP_URL}`, {
+  //         identifier: userDetails.username,
+  //         code: mfaCode1,
+  //       });
+
+  //       if (response?.status === 200 && response?.data?.success) {
+  //         console.log("TOTP verification successful:", response.data);
+  //         handleTOTPSwitch();
+  //         setIsTOTPEnabled(true);
+  //       } else {
+  //         setError(
+  //           response?.data?.message || "Invalid TOTP. Please try again."
+  //         );
+  //       }
+  //     }
+  //   } catch (error) {
+  //     console.error("Error during TOTP verification:", error?.response?.data);
+  //     setError(
+  //       error?.response?.data?.message ||
+  //         "An error occurred during TOTP verification. Please try again."
+  //     );
+  //   }
+  // };
+
+  const handleTOTPSwitch = async () => {
+    if (!isTOTPEnabled) {
+      console.warn("TOTP can only be enabled after verification.");
+      return; // Prevent enabling directly
+    }
+
+    try {
+      const response = await axios.post(`${API_URLS.TOGGLE_TOTP}`, {
+        identifier: userDetails.username,
+        enable: false, // Only allow disabling
+      });
+
+      if (response?.status === 200 && response?.data?.success) {
+        console.log("Successfully disabled TOTP");
+
+        // Functional update to ensure latest state
+        setIsTOTPEnabled((prev) => false);
+      } else {
+        console.error("Failed to disable TOTP:", response?.data?.message);
+      }
+    } catch (error) {
+      console.error("Error while disabling TOTP:", error?.message);
+    }
+  };
+
   const verifyMfaCode = async () => {
     if (mfaCode1.length !== 6) {
       setError("Please enter a valid 6-digit OTP.");
       return;
     }
-    // console.log("totp", totp);
 
     setError("");
     try {
-      if (userData) {
+      if (userDetails) {
         const response = await axios.post(`${API_URLS.VERIFY_TOTP_URL}`, {
-          identifier: "mahes2shjs",
+          identifier: userDetails.username,
           code: mfaCode1,
         });
 
         if (response?.status === 200 && response?.data?.success) {
           console.log("TOTP verification successful:", response.data);
-          // navigate("/dashboard");
-          // alert("TOTP verification successful:");
-          setIsTOTPEnabled(true);
+
+          // Call API to enable TOTP only after successful verification
+          await axios.post(`${API_URLS.TOGGLE_TOTP}`, {
+            identifier: userDetails.username,
+            enable: true, // Enable TOTP after verification
+          });
+
+          // Functional state update
+          setIsTOTPEnabled((prev) => true);
         } else {
           setError(
             response?.data?.message || "Invalid TOTP. Please try again."
@@ -96,29 +232,6 @@ const ProfileModal = ({ isOpen, onClose, user }) => {
         error?.response?.data?.message ||
           "An error occurred during TOTP verification. Please try again."
       );
-    }
-  };
-  const handleOtpSwitch = async () => {
-    try {
-      const newOtpStatus = !isOTPEnabled; // Toggle the value directly
-
-      // Use functional setState to get the latest state value
-      setIsOTPEnabled((prevState) => {
-        return newOtpStatus;
-      });
-
-      const response = await axios.post(`${API_URLS.TOGGLE_OTP}`, {
-        identifier: user.username,
-        enable: newOtpStatus, // Use the toggled value directly in the API request
-      });
-
-      if (response?.status === 200 && response?.data?.success) {
-        console.log("successfully toggled");
-      } else {
-        console.error("Failed to generate QR Code:", response?.data?.message);
-      }
-    } catch (error) {
-      console.error("Error while generating QR Code:", error?.message);
     }
   };
 
@@ -152,7 +265,9 @@ const ProfileModal = ({ isOpen, onClose, user }) => {
               alt="Profile"
               className="w-20 h-20 rounded-full border-2 border-gray-500"
             />
-            <h3 className="mt-3 text-xl font-semibold">{userData.fullName}</h3>
+            <h3 className="mt-3 text-xl font-semibold">
+              {userDetails.username}
+            </h3>
           </div>
 
           <nav className="flex flex-col space-y-2">
@@ -193,27 +308,27 @@ const ProfileModal = ({ isOpen, onClose, user }) => {
               <h2 className="text-2xl font-bold">About</h2>
               <div className="mt-4 bg-gray-100 p-4 rounded-lg">
                 <p className="mb-2">
-                  <strong>Full Name:</strong> {userData.fullName}
+                  <strong>Full Name:</strong> {userDetails.username}
                 </p>
                 <p className="mb-2">
-                  <strong>Email:</strong> {userData.email}
+                  <strong>Email:</strong> {userDetails.email}
                 </p>
                 <p className="mb-2">
-                  <strong>Phone:</strong> {userData.phone}
+                  <strong>Phone:</strong> {userDetails.phone}
                 </p>
                 <p className="mb-2">
-                  <strong>Address:</strong> {userData.address}
+                  <strong>Address:</strong> {userDetails.address}
                 </p>
               </div>
 
               <h2 className="text-2xl font-bold mt-6">Recent Projects</h2>
               <div className="mt-4 bg-gray-100 p-4 rounded-lg">
                 <p>
-                  <strong>Project Name:</strong> {userData.projectName}
+                  <strong>Project Name:</strong> {userDetails.projectName}
                 </p>
                 <p>
                   <strong>Project Description:</strong>{" "}
-                  {userData.projectDescription}
+                  {userDetails.projectDescription}
                 </p>
               </div>
             </div>
@@ -252,11 +367,7 @@ const ProfileModal = ({ isOpen, onClose, user }) => {
                       <input
                         type="checkbox"
                         checked={isTOTPEnabled}
-                        onChange={() => {
-                          if (isTOTPEnabled) {
-                            setIsTOTPEnabled(false);
-                          }
-                        }}
+                        onChange={handleTOTPSwitch}
                       />
                       <span className="slider round"></span>
                     </label>

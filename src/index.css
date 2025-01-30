@@ -200,6 +200,24 @@ form button[type='button'] {
   background-color: #c4c4c457;
 }
 
+.login-center-buttons .opt-button {
+  background-color: black;
+  color: white;
+  border: 3px solid black;
+  font-size: large;
+  font-weight: bolder;
+  padding: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-radius: 25px; /* Adds rounded corners */
+
+}
+
+.login-center-buttons .opt-button:hover {
+  color: #333;
+  background-color: white;
+}
+
 .popover-message{
   color: red;
   font-size: 12px;

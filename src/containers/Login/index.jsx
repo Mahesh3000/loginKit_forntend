@@ -135,7 +135,7 @@ const Login = () => {
         password: password,
       });
 
-      console.log("response", loginResponse.data);
+      // console.log("response", loginResponse.data);
       if (loginResponse.status === 200) {
         if (!loginResponse.data.success) {
           setError(true);
@@ -145,8 +145,8 @@ const Login = () => {
           const userDetails = loginResponse?.data;
           dispatch(setUserData(userDetails?.user));
           const parserUserDetails = JSON.stringify(userDetails);
-          localStorage.setItem(userDetails?.user?.username, parserUserDetails);
-          localStorage.setItem("token", userDetails?.token);
+          localStorage.setItem("user", parserUserDetails);
+          console.log("in login");
           navigate("/onboarding");
         }
       }

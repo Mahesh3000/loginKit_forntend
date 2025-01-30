@@ -8,9 +8,12 @@ import LeftSideContainer from "./LeftSideContainer";
 import { useNavigate } from "react-router-dom";
 import { API_URLS } from "../constants";
 import axios from "axios";
+import { setUserData } from "../../redux";
+import { useDispatch } from "react-redux";
 
 const SignUp = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [error, setError] = useState(false);
   const [message, setMessage] = useState("");
   const [formData, setFormData] = useState({
@@ -26,7 +29,6 @@ const SignUp = () => {
   // Update function for individual fields
   const handleChange = (e) => {
     const { name, value } = e.target;
-    console.log("formData", formData);
     setMessage("");
     setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
@@ -72,6 +74,7 @@ const SignUp = () => {
       setMessage("Passwords do not match");
       return;
     }
+
     // Proceed with API calls
     try {
       // Send signup request
@@ -83,20 +86,23 @@ const SignUp = () => {
       });
 
       if (response.status === 200) {
-        console.log("sign up success full");
+        console.log("Sign up successful");
 
+        // After successful signup, proceed with email verification
         try {
           const verifyResponse = await axios.post(
             `${API_URLS.VERIFY_EMAIL_URL}`,
-            {
-              email,
-            }
+            { email }
           );
 
           if (verifyResponse.status === 200 && verifyResponse.data.success) {
             console.log("Verification email sent successfully");
             setMessage("Registration successful! Please verify your email.");
-            navigate("/");
+            localStorage.setItem("user", JSON.stringify(response.data));
+            localStorage.setItem("token", response?.data?.token);
+            dispatch(setUserData(response.data.user));
+
+            navigate("/dashboard"); // Redirect to the dashboard route
           } else {
             setMessage(
               verifyResponse.data.message ||

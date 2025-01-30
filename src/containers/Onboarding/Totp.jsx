@@ -101,10 +101,18 @@ const Totp = ({
               </a>
             </div>
             <div className="login-center-buttons">
-              <button type="button" onClick={handleSubmit}>
+              <button
+                className="opt-button"
+                type="button"
+                onClick={handleSubmit}
+              >
                 Verify
               </button>
-              <button type="button" onClick={() => setIsFirstTime(true)}>
+              <button
+                className="opt-buttons"
+                type="button"
+                onClick={() => setIsFirstTime(true)}
+              >
                 Go Back
               </button>
             </div>
