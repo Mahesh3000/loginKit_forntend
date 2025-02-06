@@ -7,8 +7,8 @@ import { FaEyeSlash } from "react-icons/fa6";
 import LeftSideContainer from "./LeftSideContainer";
 import { useNavigate } from "react-router-dom";
 import Mpin from "./Mpin";
-import { setUserData } from "../../redux";
-import { useDispatch } from "react-redux";
+import { setLoader, setUserData } from "../../redux";
+import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { API_URLS } from "../constants";
 import Loading from "../Loading";
@@ -21,7 +21,9 @@ const Login = () => {
   const [message, setMessage] = useState("");
   const [isMediumError, setIsMediumError] = useState(false);
   const [isEmailVerified, setIsEmailVerified] = useState(false);
-  const [isLoading, setIsLoading] = useState(true); // State for loading
+  const loader = useSelector((state) => state?.auth?.loader);
+
+  console.log("loader", loader);
 
   const [formData, setFormData] = useState({
     username: "",
@@ -120,6 +122,7 @@ const Login = () => {
 
     setError(false);
     setMessage("");
+    dispatch(setLoader(true));
 
     const { username, password } = formData;
 
@@ -137,6 +140,8 @@ const Login = () => {
 
       // console.log("response", loginResponse.data);
       if (loginResponse.status === 200) {
+        dispatch(setLoader(false));
+
         if (!loginResponse.data.success) {
           setError(true);
           setMessage(loginResponse?.data?.message);
@@ -151,6 +156,7 @@ const Login = () => {
         }
       }
     } catch (error) {
+      dispatch(setLoader(false));
       console.error("Error during login:", error.response?.data);
       if (error.response) {
         setError(true);
@@ -170,7 +176,7 @@ const Login = () => {
 
   return (
     <div className="login-main">
-      {/* {isLoading && <Loading />} */}
+      {loader && <Loading />}
       <LeftSideContainer />
       <div className="login-right">
         <div className="login-right-container">

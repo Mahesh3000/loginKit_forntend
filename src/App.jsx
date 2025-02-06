@@ -12,6 +12,7 @@ import NotFound from "./containers/Login/NotFound";
 import Onboarding from "./containers/Onboarding";
 import ForgetPassword from "./containers/Login/ForgetPassword";
 import Dashboard from "./containers/Dashboard";
+import Loading from "./containers/Loading";
 
 function App() {
   return (

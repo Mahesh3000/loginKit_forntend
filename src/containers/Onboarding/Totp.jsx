@@ -2,30 +2,38 @@ import React, { memo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { API_URLS } from "../constants";
 import axios from "axios";
+import { setLoader } from "../../redux";
+import { useDispatch } from "react-redux";
 
 const Totp = ({
   generateQr,
   setGenerateQr,
   setIsFirstTime,
   isFirstTime,
+  fetchQrCode,
   userData,
 }) => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const [error, setError] = useState("");
   const [totp, setTOtp] = useState("");
 
   const handleChange = (e) => {
-    setTOtp(e.target.value);
-    setError("");
+    const value = e.target.value;
+    if (/^\d*$/.test(value)) {
+      setTOtp(value);
+      setError("");
+    }
   };
 
-  const handleSubmit = async () => {
-    if (totp.length !== 6) {
-      setError("Please enter a valid 6-digit OTP.");
+  const handleTotpSubmit = async () => {
+    if (!totp || totp.length !== 6) {
+      setError("Please enter a valid 6-digit TOTP.");
       return;
     }
     console.log("totp", totp);
+    dispatch(setLoader(true));
 
     setError("");
     try {
@@ -36,6 +44,7 @@ const Totp = ({
         });
 
         if (response?.status === 200 && response?.data?.success) {
+          dispatch(setLoader(false));
           console.log("TOTP verification successful:", response.data);
           navigate("/dashboard");
         } else {
@@ -45,12 +54,20 @@ const Totp = ({
         }
       }
     } catch (error) {
+      dispatch(setLoader(false));
+
       console.error("Error during TOTP verification:", error?.response?.data);
       setError(
         error?.response?.data?.message ||
           "An error occurred during TOTP verification. Please try again."
       );
     }
+  };
+
+  const handleForgetTotp = () => {
+    console.log("handleForgetTotp is clicked");
+    setIsFirstTime(true);
+    fetchQrCode(userData);
   };
 
   return (
@@ -68,7 +85,7 @@ const Totp = ({
               Scan the QR code below or enter the provided secret key manually.
             </li>
           </ol>
-          <div className="qr-code">
+          <div className=" flex justify-center mb-1.5">
             <img src={generateQr} alt="QR Code" />
           </div>
           <button
@@ -96,7 +113,11 @@ const Totp = ({
             />
             <div className="login-center-options">
               <div className="error-div">{error}</div>
-              <a href="#" className="forgot-pass-link">
+              <a
+                href="#"
+                className="forgot-pass-link"
+                onClick={handleForgetTotp}
+              >
                 Forget TOTP
               </a>
             </div>
@@ -104,14 +125,14 @@ const Totp = ({
               <button
                 className="opt-button"
                 type="button"
-                onClick={handleSubmit}
+                onClick={handleTotpSubmit}
               >
                 Verify
               </button>
               <button
                 className="opt-buttons"
                 type="button"
-                onClick={() => setIsFirstTime(true)}
+                onClick={() => navigate("/")}
               >
                 Go Back
               </button>

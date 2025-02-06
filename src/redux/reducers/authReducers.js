@@ -1,7 +1,8 @@
-import { USER_DATA } from "../actions/actionTypes";
+import { LOADER, USER_DATA } from "../actions/actionTypes";
 
 const initialState = {
   userData: "",
+  loader: false,
 };
 
 const authReducer = (state = initialState, action) => {
@@ -10,6 +11,11 @@ const authReducer = (state = initialState, action) => {
       return {
         ...state,
         userData: action.payload,
+      };
+    case LOADER:
+      return {
+        ...state,
+        loader: action.payload,
       };
 
     default:

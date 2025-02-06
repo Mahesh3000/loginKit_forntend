@@ -27,24 +27,12 @@ const ProfileModal = ({ isOpen, onClose, user }) => {
 
   useEffect(() => {
     if (userDetails) {
-      // Set the state based on the data after it's loaded
       setIsTOTPEnabled(userDetails.totp_enabled);
       setIsOTPEnabled(userDetails.otp_enabled);
-      // localStorage.setItem(
-      //   "user",
-      //   JSON.stringify({
-      //     // ...userDetails,
-      //     user: { ...userDetails.user, totp_enabled: true },
-      //   })
-      // );
     }
-  }, [userDetails]); // Only runs when userDetails changes
-
-  console.log("userDetails", userDetails);
+  }, [userDetails]);
 
   const navigate = useNavigate();
-
-  console.log("user", user.otp_enabled);
 
   const handleLogout = () => {
     localStorage.removeItem("token"); // Clear authentication token
@@ -102,73 +90,6 @@ const ProfileModal = ({ isOpen, onClose, user }) => {
       console.error("Error while generating QR Code:", error?.message);
     }
   };
-
-  // () => {
-  //   if (isTOTPEnabled) {
-  //     setIsTOTPEnabled(false);
-  //   }
-  // }
-  // const handleTOTPSwitch = async () => {
-  //   try {
-  //     const newTOTPStatus = !isTOTPEnabled; // Toggle the value directly
-
-  //     // Make the API request to update the TOTP status
-  //     const response = await axios.post(`${API_URLS.TOGGLE_TOTP}`, {
-  //       identifier: userDetails.username,
-  //       enable: newTOTPStatus, // Send the toggled value to the API
-  //     });
-
-  //     if (response?.status === 200 && response?.data?.success) {
-  //       // Update localStorage only if API call is successful
-  //       console.log("Successfully toggled TOTP status");
-
-  //       // Use functional setState to get the latest state value
-  //       setIsTOTPEnabled((prevState) => {
-  //         const updatedStatus = !prevState;
-
-  //         return updatedStatus;
-  //       });
-  //     } else {
-  //       console.error("Failed to toggle TOTP:", response?.data?.message);
-  //     }
-  //   } catch (error) {
-  //     console.error("Error while toggling TOTP:", error?.message);
-  //   }
-  // };
-
-  // const verifyMfaCode = async () => {
-  //   if (mfaCode1.length !== 6) {
-  //     setError("Please enter a valid 6-digit OTP.");
-  //     return;
-  //   }
-  //   // console.log("totp", totp);
-
-  //   setError("");
-  //   try {
-  //     if (userDetails) {
-  //       const response = await axios.post(`${API_URLS.VERIFY_TOTP_URL}`, {
-  //         identifier: userDetails.username,
-  //         code: mfaCode1,
-  //       });
-
-  //       if (response?.status === 200 && response?.data?.success) {
-  //         console.log("TOTP verification successful:", response.data);
-  //         handleTOTPSwitch();
-  //         setIsTOTPEnabled(true);
-  //       } else {
-  //         setError(
-  //           response?.data?.message || "Invalid TOTP. Please try again."
-  //         );
-  //       }
-  //     }
-  //   } catch (error) {
-  //     console.error("Error during TOTP verification:", error?.response?.data);
-  //     setError(
-  //       error?.response?.data?.message ||
-  //         "An error occurred during TOTP verification. Please try again."
-  //     );
-  //   }
-  // };
 
   const handleTOTPSwitch = async () => {
     if (!isTOTPEnabled) {
@@ -266,11 +187,11 @@ const ProfileModal = ({ isOpen, onClose, user }) => {
               className="w-20 h-20 rounded-full border-2 border-gray-500"
             />
             <h3 className="mt-3 text-xl font-semibold">
-              {userDetails.username}
+              {userDetails?.username || "Guest User"}
             </h3>
           </div>
 
-          <nav className="flex flex-col space-y-2">
+          {/* <nav className="flex flex-col space-y-2">
             <button
               onClick={() => setActiveTab("home")}
               className={`px-6 py-3 text-lg font-semibold text-left h-14 ${
@@ -291,6 +212,30 @@ const ProfileModal = ({ isOpen, onClose, user }) => {
             >
               Settings
             </button>
+          </nav> */}
+          <nav className="flex flex-col space-y-2">
+            <button
+              onClick={() => setActiveTab("home")}
+              className={`px-6 py-3 text-lg font-semibold text-left h-14 ${
+                activeTab === "home"
+                  ? "border-l-4 border-blue-600 text-blue-600 bg-gray-200"
+                  : "text-gray-600 hover:text-blue-600 hover:bg-gray-100"
+              }`}
+            >
+              Home
+            </button>
+            {userDetails && userDetails?.username && (
+              <button
+                onClick={() => setActiveTab("settings")}
+                className={`px-6 py-3 text-lg font-semibold text-left h-14 ${
+                  activeTab === "settings"
+                    ? "border-l-4 border-blue-600 text-blue-600 bg-gray-200"
+                    : "text-gray-600 hover:text-blue-600 hover:bg-gray-100"
+                }`}
+              >
+                Settings
+              </button>
+            )}
           </nav>
 
           <button
@@ -303,32 +248,32 @@ const ProfileModal = ({ isOpen, onClose, user }) => {
 
         {/* Content Section */}
         <div className="flex-1 p-6 mt-0.5">
-          {activeTab === "home" && (
+          {activeTab === "home" && userDetails && (
             <div>
               <h2 className="text-2xl font-bold">About</h2>
               <div className="mt-4 bg-gray-100 p-4 rounded-lg">
                 <p className="mb-2">
-                  <strong>Full Name:</strong> {userDetails.username}
+                  <strong>Full Name:</strong> {userDetails?.username}
                 </p>
                 <p className="mb-2">
-                  <strong>Email:</strong> {userDetails.email}
+                  <strong>Email:</strong> {userDetails?.email}
                 </p>
                 <p className="mb-2">
-                  <strong>Phone:</strong> {userDetails.phone}
+                  <strong>Phone:</strong> {userDetails?.phone}
                 </p>
                 <p className="mb-2">
-                  <strong>Address:</strong> {userDetails.address}
+                  <strong>Address:</strong> {userDetails?.address}
                 </p>
               </div>
 
               <h2 className="text-2xl font-bold mt-6">Recent Projects</h2>
               <div className="mt-4 bg-gray-100 p-4 rounded-lg">
                 <p>
-                  <strong>Project Name:</strong> {userDetails.projectName}
+                  <strong>Project Name:</strong> {userDetails?.projectName}
                 </p>
                 <p>
                   <strong>Project Description:</strong>{" "}
-                  {userDetails.projectDescription}
+                  {userDetails?.projectDescription}
                 </p>
               </div>
             </div>

@@ -2,16 +2,19 @@ import React, { memo, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { API_URLS } from "../constants";
 import axios from "axios";
+import { useDispatch } from "react-redux";
+import { setLoader } from "../../redux";
 
-const Otp = ({ userData }) => {
+const Otp = ({ userData, sendEmailToUser }) => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const [error, setError] = useState("");
   const [otp, setOtp] = useState("");
   const [timeLeft, setTimeLeft] = useState(30);
   const [isDisabled, setIsDisabled] = useState(true);
-  const [email, setEmail] = useState("mahdskjhkjkj@gmail.com");
+  const [email, setEmail] = useState("");
   const [phoneNumber, setPhoneNumber] = useState(8768767868);
-  console.log("userData in otp screen", userData);
 
   const maskEmail = (email) => {
     const [localPart, domain] = email.split("@");
@@ -19,13 +22,23 @@ const Otp = ({ userData }) => {
     return `${maskedLocalPart}@${domain}`;
   };
 
+  useEffect(() => {
+    if (userData?.email) {
+      setEmail(userData.email);
+    }
+  }, [userData]); // Update when userData changes
+
   const maskPhoneNumber = (phoneNumber) => {
     const strNumber = phoneNumber.toString();
     return "******" + strNumber.slice(-4);
   };
 
   const handleChange = (e) => {
-    setOtp(e.target.value);
+    const value = e.target.value;
+    if (/^\d*$/.test(value)) {
+      setOtp(value);
+      setError("");
+    }
   };
 
   useEffect(() => {
@@ -42,19 +55,20 @@ const Otp = ({ userData }) => {
   }, [timeLeft]);
 
   const handleResendOtp = () => {
-    console.log("kjdshfj");
+    sendEmailToUser(userData);
+    setTimeLeft(30);
+    setIsDisabled(true);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("i ranssss");
 
     if (!otp || otp.length !== 6) {
       setError("Please enter a valid 6-digit OTP.");
       return;
     }
 
-    // console.log("OTP entered:", otp);
+    dispatch(setLoader(true));
 
     try {
       const response = await axios.post(`${API_URLS.VERIFY_OTP_URL}`, {
@@ -64,11 +78,15 @@ const Otp = ({ userData }) => {
 
       if (response?.status === 200 && response?.data?.success) {
         console.log("OTP verification successful:", response.data);
+        dispatch(setLoader(false));
+
         navigate("/dashboard");
       } else {
         setError(response?.data?.message || "Invalid TOTP. Please try again.");
       }
     } catch (error) {
+      dispatch(setLoader(false));
+
       console.error(
         "Error during OTP verification:",
         error?.response?.data || error.message

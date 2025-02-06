@@ -135,6 +135,10 @@ const SignUp = () => {
     }
   };
 
+  const handleGoogleLogin = () => {
+    window.open(`${API_URLS.GOOGLE_LOGIN}/callback`, "_self");
+  };
+
   return (
     <div className="login-main">
       <LeftSideContainer />
@@ -231,7 +235,11 @@ const SignUp = () => {
                 <button type="submit" className="sign-up-btn">
                   Sign Up
                 </button>
-                <button type="button" className="google-btn">
+                <button
+                  type="button"
+                  className="google-btn"
+                  onClick={handleGoogleLogin}
+                >
                   <img src={GoogleSvg} alt="Google Logo" />
                   Continue with Google
                 </button>

@@ -318,6 +318,10 @@ form button[type='button'] {
 /* totp css starts here */
 .qr-code {
   margin-bottom: 20px;
+  /* margin-left: 20px; */
+  /* align-items: center; */
+  display: flex;
+  justify-content: center;
 }
 
 

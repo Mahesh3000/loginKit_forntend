@@ -8,6 +8,7 @@ import Totp from "./Totp";
 import { useSelector, useDispatch } from "react-redux";
 import { API_URLS } from "../constants";
 import axios from "axios";
+import Loading from "../Loading";
 // import { setEmail } from "../../redux/actions"; // Assuming you have actions to set user data
 
 const Onboarding = () => {
@@ -17,6 +18,7 @@ const Onboarding = () => {
   const [isFirstTime, setIsFirstTime] = useState(false);
   const [generateQr, setGenerateQr] = useState(false);
   const userData = useSelector((state) => state?.auth?.userData);
+  const loader = useSelector((state) => state?.auth?.loader);
 
   const fetchQrCode = async () => {
     try {
@@ -56,8 +58,8 @@ const Onboarding = () => {
     //debugger;
     if (userData) {
       if (
-        (userData.totp_enabled === true && userData.otp_enabled === true) ||
-        (userData.totp_enabled === true && userData.otp_enabled === false)
+        (userData.totp_enabled === true && userData.otp_enabled === false) ||
+        (userData.totp_enabled === true && userData.otp_enabled === true)
       ) {
         setStep(2);
       } else if (
@@ -73,17 +75,21 @@ const Onboarding = () => {
         navigate("/dashboard"); // If no user data, navigate back to login page
       }
     }
-  }, []);
+  }, [userData]);
 
   return (
     <div className="login-main">
+      {loader && <Loading />}
+
       <LeftSideContainer />
       <div className="login-right">
         <div className="login-right-container">
           <div className="login-logo">
             <img src={Logo} alt="Logo" />
           </div>
-          {step === 1 && <Otp userData={userData} />}
+          {step === 1 && (
+            <Otp userData={userData} sendEmailToUser={sendEmailToUser} />
+          )}
           {step === 2 && (
             <Totp
               generateQr={generateQr}
@@ -91,6 +97,7 @@ const Onboarding = () => {
               setIsFirstTime={setIsFirstTime}
               isFirstTime={isFirstTime}
               userData={userData}
+              fetchQrCode={fetchQrCode}
             />
           )}
           {step === 3 && <NotFound />}{" "}
@@ -102,38 +109,3 @@ const Onboarding = () => {
 };
 
 export default Onboarding;
-
-// useEffect(() => {
-//   if (userData) {
-//     // If the user is first time, handle step 1
-//     if (userData.is_first_time_user) {
-//       if (userData.totp_enabled === false && userData.otp_enabled === false) {
-//         setIsFirstTime(true);
-//         setStep(2);
-//         fetchQrCode();
-//       }
-//     } else {
-//       // debugger;
-//       if (
-//         (userData.totp_enabled === true && userData.otp_enabled === true) ||
-//         (userData.totp_enabled === true && userData.otp_enabled === false)
-//       ) {
-//         setStep(2);
-//       } else if (
-//         userData.otp_enabled === true &&
-//         userData.totp_enabled === false
-//       ) {
-//         sendEmailToUser(userData);
-//         setStep(1);
-//       } else if (
-//         userData.totp_enabled === false &&
-//         userData.otp_enabled === false
-//       ) {
-
-//         navigate("/dashboard"); // If no user data, navigate back to login page
-//       }
-//     }
-//   } else {
-// navigate("/");
-// }
-// }, [userData, navigate]);
