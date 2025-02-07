@@ -11,7 +11,7 @@ const API_URLS = {
   VERIFY_OTP_URL: "http://18.234.47.219:8000/otp/verify-otp",
   TOGGLE_TOTP: "http://18.234.47.219:8000/auth/toggle-totp",
   TOGGLE_OTP: "http://18.234.47.219:8000/auth/toggle-otp",
-  GOOGLE_LOGIN: "http://maheshsivangi.tech:8000/auth/google",
+  GOOGLE_LOGIN: "http://18.234.47.219:8000/auth/google",
 };
 
 export { API_URLS };
