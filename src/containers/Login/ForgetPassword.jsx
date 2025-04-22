@@ -79,10 +79,18 @@ const ForgetPassword = () => {
                     <div className="error-div">{error}</div>
                   </div>
                   <div className="login-center-buttons">
-                    <button type="button" onClick={handleEmailSubmit}>
+                    <button
+                      type="button"
+                      onClick={handleEmailSubmit}
+                      className="sign-up-btn"
+                    >
                       Send Reset Link
                     </button>
-                    <button type="button" onClick={() => navigate("/")}>
+                    <button
+                      type="button"
+                      onClick={() => navigate("/")}
+                      className="sign-up-btn"
+                    >
                       Go Back
                     </button>
                   </div>
@@ -115,10 +123,18 @@ const ForgetPassword = () => {
                     <div className="error-div">{error}</div>
                   </div>
                   <div className="login-center-buttons">
-                    <button type="button" onClick={handleCodeSubmit}>
+                    <button
+                      type="button"
+                      onClick={handleCodeSubmit}
+                      className="sign-up-btn"
+                    >
                       Reset Password
                     </button>
-                    <button type="button" onClick={() => navigate("/")}>
+                    <button
+                      type="button"
+                      onClick={() => navigate("/")}
+                      className="sign-up-btn"
+                    >
                       Go Back
                     </button>
                   </div>

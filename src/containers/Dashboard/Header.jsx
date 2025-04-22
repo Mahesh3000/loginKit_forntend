@@ -1,40 +1,65 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import {
+  AppBar,
+  Toolbar,
+  Typography,
+  Box,
+  Avatar,
+  IconButton,
+  Stack,
+} from "@mui/material";
 import ProfileModal from "./ProfileModal";
 
 const Header = ({ user }) => {
   const navigate = useNavigate();
-
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const openModal = () => {
-    setIsModalOpen(true);
-  };
-
-  const closeModal = () => {
-    setIsModalOpen(false);
-  };
-  console.log("isModalOpen", isModalOpen);
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
 
   return (
-    <header className="header">
-      <div className="header-logo">Login Kit</div>
-      <nav className="header-nav">
-        <ul>
-          <li onClick={() => navigate("/dashboard")}>Dashboard</li>
-          <li onClick={() => navigate("/orders")}>Orders</li>
-        </ul>
-      </nav>
-      <div className="header-profile" onClick={openModal}>
-        <img
-          src="UserProfilePic"
-          alt="User Profile"
-          className="profile-image"
-        />
+    <>
+      <AppBar position="static" color="primary">
+        <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
+          {/* Logo / Title */}
+          <Typography
+            variant="h6"
+            component="div"
+            sx={{ fontWeight: "bold", cursor: "pointer" }}
+            onClick={() => navigate("/")}
+          >
+            Login Kit
+          </Typography>
 
-        <ProfileModal isOpen={isModalOpen} onClose={closeModal} user={user} />
-      </div>
-    </header>
+          {/* Nav Items */}
+          <Stack direction="row" spacing={4}>
+            <Typography
+              variant="button"
+              sx={{ cursor: "pointer" }}
+              onClick={() => navigate("/dashboard")}
+            >
+              Dashboard
+            </Typography>
+            <Typography
+              variant="button"
+              sx={{ cursor: "pointer" }}
+              onClick={() => navigate("/orders")}
+            >
+              Orders
+            </Typography>
+          </Stack>
+
+          {/* Profile */}
+          <IconButton onClick={openModal}>
+            <Avatar alt="User" src="/profile.png" />
+          </IconButton>
+        </Toolbar>
+      </AppBar>
+
+      {/* Profile Modal */}
+      <ProfileModal isOpen={isModalOpen} onClose={closeModal} user={user} />
+    </>
   );
 };
 

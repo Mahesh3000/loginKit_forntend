@@ -17,7 +17,7 @@ FROM nginx:alpine
 COPY --from=build /app/dist /usr/share/nginx/html  
 
 EXPOSE 5173
-    # Nginx runs on port 80
+# Nginx runs on port 80
 
 # Start Nginx in the foreground
 CMD ["nginx", "-g", "daemon off;"]  
