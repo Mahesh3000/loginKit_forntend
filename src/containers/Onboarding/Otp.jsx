@@ -77,6 +77,9 @@ const Otp = ({ userData, sendEmailToUser }) => {
       });
 
       if (response?.status === 200 && response?.data?.success) {
+        localStorage.setItem("user", JSON.stringify(response.data));
+        localStorage.setItem("token", response.data.token); // or set a flag
+
         console.log("OTP verification successful:", response.data);
         dispatch(setLoader(false));
 

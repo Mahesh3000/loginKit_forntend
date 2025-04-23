@@ -14,9 +14,13 @@ import ProfileModal from "./ProfileModal";
 const Header = ({ user }) => {
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [addMFA, setAddMFA] = useState(false);
 
   const openModal = () => setIsModalOpen(true);
-  const closeModal = () => setIsModalOpen(false);
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setAddMFA(false);
+  };
 
   return (
     <>
@@ -41,13 +45,6 @@ const Header = ({ user }) => {
             >
               Dashboard
             </Typography>
-            <Typography
-              variant="button"
-              sx={{ cursor: "pointer" }}
-              onClick={() => navigate("/orders")}
-            >
-              Orders
-            </Typography>
           </Stack>
 
           {/* Profile */}
@@ -58,7 +55,13 @@ const Header = ({ user }) => {
       </AppBar>
 
       {/* Profile Modal */}
-      <ProfileModal isOpen={isModalOpen} onClose={closeModal} user={user} />
+      <ProfileModal
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        user={user}
+        addMFA={addMFA}
+        setAddMFA={setAddMFA}
+      />
     </>
   );
 };

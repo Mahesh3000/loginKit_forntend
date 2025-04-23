@@ -1,11 +1,19 @@
-import React, { memo } from "react";
+import React from "react";
+import { Navigate, useLocation } from "react-router-dom";
 
-const ProtectedRoute = () => {
-  return (
-    <div>
-      <h1>jhaskjhkj</h1>
-    </div>
-  );
+// Example: replace with your actual auth logic
+const isAuthenticated = () => {
+  return localStorage.getItem("token") !== null;
+};
+
+const ProtectedRoute = ({ children }) => {
+  const location = useLocation();
+
+  if (!isAuthenticated()) {
+    return <Navigate to="/" state={{ from: location }} replace />;
+  }
+
+  return children;
 };
 
 export default ProtectedRoute;

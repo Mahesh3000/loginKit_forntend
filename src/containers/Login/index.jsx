@@ -151,7 +151,6 @@ const Login = () => {
           dispatch(setUserData(userDetails?.user));
           const parserUserDetails = JSON.stringify(userDetails);
           localStorage.setItem("user", parserUserDetails);
-          console.log("in login");
           navigate("/onboarding");
         }
       }

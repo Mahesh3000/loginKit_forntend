@@ -42,7 +42,6 @@ const Onboarding = () => {
       const response = await axios.post(`${API_URLS.REQUEST_OTP_URL}`, {
         email: user?.email,
       });
-      console.log("response", response);
 
       if (response?.status === 200 && response?.data?.success) {
         // setGenerateQr(response?.data?.qrCode);
