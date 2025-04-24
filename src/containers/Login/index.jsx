@@ -150,6 +150,7 @@ const Login = () => {
           const userDetails = loginResponse?.data;
           dispatch(setUserData(userDetails?.user));
           const parserUserDetails = JSON.stringify(userDetails);
+          localStorage.setItem("token", userDetails?.data?.token); // or set a flag
           localStorage.setItem("user", parserUserDetails);
           navigate("/onboarding");
         }
